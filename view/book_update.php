@@ -74,7 +74,7 @@ echo '</style>';
 
     </form>
     <div class="text-center">
-        <button type="submit" class="btn btn-success mb-3 pe-5 ps-5">Xác nhận</button>
+        <button type="submit" name ="confirm" class="btn btn-success mb-3 pe-5 ps-5">Xác nhận</button>
     </div>
 </div>
 
@@ -133,6 +133,7 @@ echo '</style>';
             validateMessage += validateField(author, 'Hãy nhập tên tác giả.', 250);
             validateMessage += validateField(quantity, 'Hãy nhập số lượng.', 2);
             validateMessage += validateField(description, 'Hãy nhập mô tả.', 1000);
+            // validateMessage += validateImage(image, 'Hãy tải ảnh lên.');
 
             $('.validate').html(validateMessage);
             if (validateMessage == "") {
