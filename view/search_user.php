@@ -1,18 +1,16 @@
+<?php include $_SERVER['DOCUMENT_ROOT'].'/manage-library/session.php' ?>
+
 <html>
 <head>
     <meta charset="UTF-8">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<?php include './common/styles/common.php'?>
 	
 </head>
 <style>
-	body {
-	   margin:40px 0px;
-	   padding: 0px;
-	}
 		
 </style>
 <body>
+	<?php include './common/main_header.php' ?>
 	<div class="container">
 		<div class="row justify-content-md-center my-3">
 			<div class="col col-lg-1">
@@ -20,9 +18,9 @@
 			</div>
 			
 			<div class="col col-lg-2">
-				<select id="select-type" class="form-select">
+				<select id="select-type" class="form-control fs-5">
 					<?php
-						$types = array(""=>"--Chọn phân loại--" ,"1"=>"Giáo viên", "2"=>"Học sinh");
+						$types = array(""=>"Tất cả" ,"1"=>"Giáo viên", "2"=>"Học sinh");
 						
 						foreach($types as $value => $text) {
 							echo "<option value='$value'>$text</option>";
@@ -34,7 +32,7 @@
 		<div class="row justify-content-md-center">
 			<span class="col col-lg-1">Từ khoá</span>
 			<div class="col col-lg-2">
-				<input id="input-keyword" class="w-100"/>
+				<input id="input-keyword" class="w-100 form-control"/>
 			</div>
 		</div>
 		<div class="row justify-content-md-center my-4">
@@ -47,9 +45,6 @@
 		<div class="p-2">
 			<a class="btn btn-secondary" href="user_add_input.php">Thêm</a>
 		</div>
-        <div class="p-2">
-            <a class="btn btn-secondary" href="home.php">Quay lại</a>
-        </div>
 	</div>
 	<table class="table">
   <thead>
