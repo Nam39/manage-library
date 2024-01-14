@@ -112,7 +112,7 @@
                                 text: "Bạn đã đăng ký thành công sách!",
                                 confirmButtonText: "Quay lại trang chủ"
                             }).then(function() {
-                                window.location.href = "../view/home.php";
+                                window.location.href = "home.php";
                             });';
                         echo '</script>';
                     } else {
