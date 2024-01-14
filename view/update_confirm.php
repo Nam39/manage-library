@@ -43,11 +43,9 @@
         $_SESSION["targetFile"] = $targetFile;
         $_SESSION["fileName"] = $avatarFile;
         $_SESSION["ID"] = $_POST["id"];
-
     } else {
-        $avatarFile = $_POST["img_path"];
+        $avatarFile = $_SESSION["img_path"];
         $_SESSION["fileName"] = $avatarFile;
-        $_SESSION["ID"] = $_POST["id"];
     }
     
     ?>
@@ -68,46 +66,25 @@
             $author = mysqli_real_escape_string($conn, $_POST['author']);
             $quantity = mysqli_real_escape_string($conn, $_POST['quantity']);
             $description = mysqli_real_escape_string($conn, $_POST['description']);
-
-            
+            $avatarFile = $_SESSION["fileName"];
+            $_SESSION["ID"] = $_POST["id"];
+            $_SESSION["img_path"] = $_SESSION["fileName"];
         }
 
-        if (isset($_POST["confirmButton"])) {
-            $avatarFile = ""; // Giả sử biến $avatarFile đã được xử lý từ tệp tải lên
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirmButton"])) {
                 date_default_timezone_set('Asia/Ho_Chi_Minh');
                 $current_datetime = date("Y-m-d H:i:s");
-
-                // Check if a record with the same name, category, and author already exists
-                $checkDuplicateSql = "SELECT COUNT(*) FROM BOOKS WHERE name = ? AND category = ? AND author = ?";
-                $checkDuplicateStmt = mysqli_prepare($conn, $checkDuplicateSql);
-                mysqli_stmt_bind_param($checkDuplicateStmt, "sss", $name, $category, $author);
-                mysqli_stmt_execute($checkDuplicateStmt);
-                mysqli_stmt_bind_result($checkDuplicateStmt, $count);
-                mysqli_stmt_fetch($checkDuplicateStmt);
-                mysqli_stmt_close($checkDuplicateStmt);
-
-                if ($count > 0) {
-                    echo '<script>';
-                    echo 'Swal.fire({
-                            icon: "error",
-                            title: "Lỗi",
-                            text: "Dữ liệu đã tồn tại trong cơ sở dữ liệu.",
-                            confirmButtonText: "Quay về trang tìm kiếm"
-                        }).then(function() {
-                            window.location.href = "book_list.php";
-                        });';
-                    echo '</script>';
-                } else {
                 $id = $_SESSION["ID"];
-
+                echo "test id: ". $id;
                 // Sử dụng prepared statements để tránh SQL injection
-                $sql = "UPDATE `BOOKS` SET `name` = ?, `category` = ?, `author` = ?, `quantity` = ?, `description` = ?, `avatar` = ?, `updated` = ?
-                        WHERE `id` = $id";
+                $sql = "UPDATE `books` SET `name` = ?, `category` = ?, `author` = ?, `quantity` = ?, `description` = ?, `avatar` = ?, `updated` = ?
+                        WHERE `id` = ?";
 
-//SET name = ?, type = ?, avatar = ?, description = ?, updated = ? WHERE sub_id = ?
 
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "sssssss", $name, $category, $author, $quantity, $description, $_SESSION["fileName"], $current_datetime);
+
+                $avatar = $_SESSION["fileName"];
+                mysqli_stmt_bind_param($stmt, "sssssssi", $name, $category, $author, $quantity, $description, $avatar, $current_datetime, $id);
 
                 if (mysqli_stmt_execute($stmt)) {
                     // Hiển thị thông báo thành công bằng SweetAlert
@@ -124,9 +101,6 @@
                 } else {
                     echo "Lỗi: " . mysqli_error($conn);
                 }
-
-                mysqli_stmt_close($stmt);
-            }
         }
         ?>
 
@@ -138,8 +112,9 @@
                 <div class='col-sm-5'>
                     <?php
                     echo $name;
-                    echo "<input type='hidden' name='name' value='$name'>" 
-                    ?>
+                    echo "<input type='hidden' name='id' id='id' class='d-none' value='" . $_SESSION['ID'] . "'>";
+                    echo "<input type='hidden' name='name' value='$name'>";
+                    ?>  
                 </div>
             </div>
 
@@ -188,7 +163,7 @@
                 <div class='col-sm-5'>
                     <?php
                     echo "<img src='avatar/$avatarFile' alt='Uploaded Image' class='img-fluid'>";
-                    echo "<input type='hidden' name='avatar' value='$avatarFile'>" 
+                    echo "<input type='hidden' name='img_path' value='$avatarFile'>" 
                     ?>
                 </div>
                 <div class='text-center'>
